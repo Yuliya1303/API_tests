@@ -1,43 +1,47 @@
 package com.yuliya1303.tests;
 
+import com.yuliya1303.lombok.User;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
-import static io.restassured.http.ContentType.JSON;
-import static org.hamcrest.Matchers.*;
+import static com.yuliya1303.tests.Specs.responseSpec;
+import static com.yuliya1303.tests.Specs.requestSpec;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class UpdateUserDataTests {
     @Test
     void testUserDataIsUpdatedWithValidData() {
 
-        String bodyCreateUser = "{ \"name\": \"Yuliya\", " +
+        String bodyCreateUser = "{ \"name\": \"Mariya\", " +
                 "\"job\": \"QA Engineer\" }";
 
-        String userId = given()
+        User data = given()
+                .spec(requestSpec)
                 .body(bodyCreateUser)
-                .contentType(JSON)
                 .when()
                 .post("https://reqres.in/api/users")
                 .then()
-                .log().status()
+                .spec(responseSpec)
                 .log().body()
-                .statusCode(201)
-                .extract().path("id").toString();
+                .extract().as(User.class);
+
+        String userId = data.getId();
 
         String bodyNewJobValue = "{ \"name\": \"Yuliya\", " +
                 "\"job\": \"Automation QA\" }";
 
-        given()
+        User updatedData = given()
+                .spec(requestSpec)
                 .body(bodyNewJobValue)
-                .contentType(JSON)
-                .when()
                 .put("https://reqres.in/api/users/"+ userId)
                 .then()
                 .log().status()
                 .log().body()
                 .statusCode(200)
-                .body("name", is("Yuliya"))
-                .body("job", is("Automation QA"))
-                .body("updatedAt", not(nullValue()));
+                .extract().as(User.class);
+
+        assertEquals("Yuliya", updatedData.getName());
+        assertEquals("Automation QA", updatedData.getJob());
+        assertNotEquals(null, updatedData.getUpdatedAt());
     }
 }

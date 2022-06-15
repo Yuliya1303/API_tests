@@ -1,10 +1,14 @@
 package com.yuliya1303.tests;
 
+import com.sun.jdi.IntegerValue;
+import com.yuliya1303.lombok.LombokUserData;
+import com.yuliya1303.lombok.User;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
-import static io.restassured.http.ContentType.JSON;
-import static org.hamcrest.Matchers.*;
+import static com.yuliya1303.tests.Specs.responseSpec;
+import static com.yuliya1303.tests.Specs.requestSpec;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CreateUserTest {
     @Test
@@ -12,18 +16,19 @@ public class CreateUserTest {
         String body = "{ \"name\": \"Yuliya\", " +
                 "\"job\": \"QA Engineer\" }";
 
-        given()
+        User data = given()
+                .spec(requestSpec)
                 .body(body)
-                .contentType(JSON)
                 .when()
-                .post("https://reqres.in/api/users")
+                .post("/users")
                 .then()
-                .log().status()
+                .spec(responseSpec)
                 .log().body()
-                .statusCode(201)
-                .body("name", is("Yuliya"))
-                .body("job", is("QA Engineer"))
-                .body("id", not(nullValue()))
-                .body("createdAt", not(nullValue()));
+                .extract().as(User.class);
+
+        assertNotEquals(null, data.getId());
+        assertEquals("Yuliya", data.getName());
+        assertEquals("QA Engineer", data.getJob());
+        assertNotEquals(null, data.getCreatedAt());
     }
 }
