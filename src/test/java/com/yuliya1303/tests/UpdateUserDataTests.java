@@ -1,25 +1,37 @@
 package com.yuliya1303.tests;
 
-import com.yuliya1303.lombok.User;
+import com.yuliya1303.models.User;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static com.yuliya1303.helpers.AllureRestAssuredFilter.withCustomTemplates;
 import static io.restassured.RestAssured.given;
-import static com.yuliya1303.tests.Specs.responseSpec;
-import static com.yuliya1303.tests.Specs.requestSpec;
+import static com.yuliya1303.helpers.Specs.responseSpec;
+import static com.yuliya1303.helpers.Specs.requestSpec;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class UpdateUserDataTests {
     @Test
+    @DisplayName("Check that user data is updated with valid data")
     void testUserDataIsUpdatedWithValidData() {
 
-        String bodyCreateUser = "{ \"name\": \"Mariya\", " +
-                "\"job\": \"QA Engineer\" }";
+        User bodyCreateUser = new User();
+        bodyCreateUser.setName("Mariya");
+        bodyCreateUser.setJob("QA Engineer");
+
+        String newName = "Yuliya";
+        String newJob = "QA Engineer";
+
+        User bodyNewJobValue = new User();
+        bodyNewJobValue.setName(newName);
+        bodyNewJobValue.setJob(newJob);
 
         User data = given()
+                .filter(withCustomTemplates())
                 .spec(requestSpec)
                 .body(bodyCreateUser)
                 .when()
-                .post("https://reqres.in/api/users")
+                .post("/users")
                 .then()
                 .spec(responseSpec)
                 .log().body()
@@ -27,21 +39,18 @@ public class UpdateUserDataTests {
 
         String userId = data.getId();
 
-        String bodyNewJobValue = "{ \"name\": \"Yuliya\", " +
-                "\"job\": \"Automation QA\" }";
-
         User updatedData = given()
+                .filter(withCustomTemplates())
                 .spec(requestSpec)
                 .body(bodyNewJobValue)
-                .put("https://reqres.in/api/users/"+ userId)
+                .put("/users/"+ userId)
                 .then()
-                .log().status()
                 .log().body()
                 .statusCode(200)
                 .extract().as(User.class);
 
-        assertEquals("Yuliya", updatedData.getName());
-        assertEquals("Automation QA", updatedData.getJob());
+        assertEquals(newName, updatedData.getName());
+        assertEquals(newJob, updatedData.getJob());
         assertNotEquals(null, updatedData.getUpdatedAt());
     }
 }

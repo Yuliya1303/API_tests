@@ -1,4 +1,4 @@
-package com.yuliya1303.tests;
+package com.yuliya1303.helpers;
 
 import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.http.ContentType;

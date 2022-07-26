@@ -1,4 +1,4 @@
-package com.yuliya1303.lombok;
+package com.yuliya1303.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
