@@ -23,7 +23,7 @@
 </p>
 
 ## :clipboard: Реализованные проверки
-- Проверка созда юзерания :heavy_check_mark:
+- Проверка созда юзера :heavy_check_mark:
 - Проверка обновления данных юзера :heavy_check_mark:
 
 ## :robot: Сборка в Jenkins
