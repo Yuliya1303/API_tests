@@ -1,13 +1,13 @@
-package com.yuliya1303.tests;
+package in.reqres.tests;
 
-import com.yuliya1303.models.User;
+import in.reqres.models.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static com.yuliya1303.helpers.AllureRestAssuredFilter.withCustomTemplates;
+import static in.reqres.helpers.AllureRestAssuredFilter.withCustomTemplates;
 import static io.restassured.RestAssured.given;
-import static com.yuliya1303.helpers.Specs.responseSpec;
-import static com.yuliya1303.helpers.Specs.requestSpec;
+import static in.reqres.helpers.Specs.responseSpec;
+import static in.reqres.helpers.Specs.requestSpec;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CreateUserTest {
